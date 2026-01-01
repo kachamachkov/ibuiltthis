@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import {
+  ArrowRightIcon,
+  EyeIcon,
+  RocketIcon,
+  SparklesIcon,
+  UsersIcon,
+} from "lucide-react";
+import StatsCard from "./stats-card";
 
 const LiveBadge = () => {
   return (
@@ -19,6 +27,25 @@ const LiveBadge = () => {
   );
 };
 
+const statsData = [
+  {
+    icon: RocketIcon,
+    value: "2.5K+",
+    label: "Projects Shared",
+  },
+  {
+    icon: UsersIcon,
+    value: "10K+",
+    label: "Active Creators",
+    hasBorder: true,
+  },
+  {
+    icon: EyeIcon,
+    value: "50K+",
+    label: "Monthly Visitors",
+  },
+];
+
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-background via-background to-muted/20">
@@ -35,7 +62,10 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
             <Button asChild size="lg" className="text-base px-8 shadow-lg">
-              <Link href="/submit">Share Your Project</Link>
+              <Link href="/submit">
+                <SparklesIcon className="size-5" />
+                Share Your Project
+              </Link>
             </Button>
             <Button
               asChild
@@ -43,8 +73,16 @@ export default function HeroSection() {
               className="text-base px-8 shadow-lg"
               variant="secondary"
             >
-              <Link href="/submit">Explore Porjects</Link>
+              <Link href="/submit">
+                Explore Porjects
+                <ArrowRightIcon className="size-5" />
+              </Link>
             </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-2xl w-full">
+            {statsData.map((stat) => (
+              <StatsCard key={stat.label} {...stat} />
+            ))}
           </div>
         </div>
       </div>
