@@ -1,6 +1,7 @@
 import {
   CompassIcon,
   HomeIcon,
+  LoaderIcon,
   SparkleIcon,
   SparklesIcon,
   UserIcon,
@@ -16,6 +17,7 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
+import { Suspense } from "react";
 
 const Logo = () => {
   return (
@@ -56,22 +58,30 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <Button>Sign Up</Button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <Button asChild>
-                <Link href="/submit">
-                  <SparklesIcon className="size-4" />
-                  <span>Submit Project</span>
-                </Link>
-              </Button>
+            <Suspense
+              fallback={
+                <div>
+                  <LoaderIcon className="size-4 animate-spin" />
+                </div>
+              }
+            >
+              <SignedOut>
+                <SignInButton />
+                <SignUpButton>
+                  <Button>Sign Up</Button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <Button asChild>
+                  <Link href="/submit">
+                    <SparklesIcon className="size-4" />
+                    <span>Submit Project</span>
+                  </Link>
+                </Button>
 
-              <UserButton />
-            </SignedIn>
+                <UserButton />
+              </SignedIn>
+            </Suspense>
           </div>
         </div>
       </div>
