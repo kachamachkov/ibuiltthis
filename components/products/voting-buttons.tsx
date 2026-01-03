@@ -2,29 +2,41 @@
 
 import { cn } from "@/lib/utils";
 import { ChevronUpIcon, ChevronDownIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   downvoteProductAction,
   upvoteProductAction,
 } from "@/lib/products/product-actions";
+import { useOptimistic, useTransition } from "react";
 
 export default function VotingButtons({
   hasVoted,
-  voteCount,
+  voteCount: initialVoteCount,
   productId,
 }: {
   hasVoted: boolean;
   voteCount: number;
   productId: number;
 }) {
+  const [optimisticVoteCount, setVoteOptimisticVoteCount] = useOptimistic(
+    initialVoteCount,
+    (currentCount, change: number) => Math.max(0, currentCount + change)
+  );
+
+  const [isPending, startTransition] = useTransition();
+
   const handleUpvote = async () => {
-    const result = await upvoteProductAction(productId);
-    console.log(result);
+    startTransition(async () => {
+      setVoteOptimisticVoteCount(1);
+      await upvoteProductAction(productId);
+    });
   };
 
   const handleDownvote = async () => {
-    const result = await downvoteProductAction(productId);
-    console.log(result);
+    startTransition(async () => {
+      setVoteOptimisticVoteCount(-1);
+      await downvoteProductAction(productId);
+    });
   };
 
   return (
@@ -39,6 +51,7 @@ export default function VotingButtons({
         onClick={handleUpvote}
         variant="ghost"
         size="icon-sm"
+        disabled={isPending}
         className={cn(
           "h-8 w-8 text-primary",
           hasVoted
@@ -49,12 +62,13 @@ export default function VotingButtons({
         <ChevronUpIcon className="size-5" />
       </Button>
       <span className="text-sm font-semibold transition-colors text-foreground">
-        {voteCount}
+        {optimisticVoteCount}
       </span>
       <Button
         onClick={handleDownvote}
         variant="ghost"
         size="icon-sm"
+        disabled={isPending}
         className={cn(
           "h-8 w-8 text-primary",
           hasVoted ? "hover:text-destructive" : "opacity-50 cursor-not-allowed"
