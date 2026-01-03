@@ -128,3 +128,46 @@ export const upvoteProductAction = async (productId: number) => {
     };
   }
 };
+
+export const downvoteProductAction = async (productId: number) => {
+  try {
+    const { userId, orgId } = await auth();
+
+    if (!userId) {
+      console.log("User not signed in");
+      return {
+        success: false,
+        message: "You must be signed in to submit a product",
+      };
+    }
+
+    if (!orgId) {
+      console.log("User not a member of an organization");
+      return {
+        success: false,
+        message: "You must be a member of an organization to submit a product",
+      };
+    }
+
+    await db
+      .update(products)
+      .set({
+        voteCount: sql`GREATEST(0, vote_count - 1)`,
+      })
+      .where(eq(products.id, productId));
+
+    revalidatePath("/");
+
+    return {
+      success: true,
+      message: "Product downvoted successfully",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Failed to downvote product",
+      voteCount: 0,
+    };
+  }
+};

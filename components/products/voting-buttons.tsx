@@ -3,7 +3,10 @@
 import { cn } from "@/lib/utils";
 import { ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { upvoteProductAction } from "@/lib/products/product-actions";
+import {
+  downvoteProductAction,
+  upvoteProductAction,
+} from "@/lib/products/product-actions";
 
 export default function VotingButtons({
   hasVoted,
@@ -16,6 +19,11 @@ export default function VotingButtons({
 }) {
   const handleUpvote = async () => {
     const result = await upvoteProductAction(productId);
+    console.log(result);
+  };
+
+  const handleDownvote = async () => {
+    const result = await downvoteProductAction(productId);
     console.log(result);
   };
 
@@ -44,6 +52,7 @@ export default function VotingButtons({
         {voteCount}
       </span>
       <Button
+        onClick={handleDownvote}
         variant="ghost"
         size="icon-sm"
         className={cn(
