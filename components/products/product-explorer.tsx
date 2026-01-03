@@ -1,11 +1,51 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+"use client";
 import { ClockIcon, SearchIcon, TrendingUpIcon } from "lucide-react";
-import { getAllProducts } from "@/lib/products/product-select";
-import ProductCard from "./product-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import ProductCard from "@/components/products/product-card";
+import { ProductType } from "@/types";
+import { useMemo, useState } from "react";
 
-export default async function ProductExplorer() {
-  const products = await getAllProducts();
+export default function ProductExplorer({
+  products,
+}: {
+  products: ProductType[];
+}) {
+  const [sortBy, setSortBy] = useState<"trending" | "recent" | "newest">(
+    "trending"
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProducts = useMemo(() => {
+    const filtered = [...products];
+
+    if (searchQuery.length > 0) {
+      return filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    switch (sortBy) {
+      case "trending":
+        return filtered.sort((a, b) => b.voteCount - a.voteCount);
+
+      case "recent":
+        return filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt || "").getTime() -
+            new Date(a.createdAt || "").getTime()
+        );
+
+      case "newest":
+        return filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt || "").getTime() -
+            new Date(a.createdAt || "").getTime()
+        );
+      default:
+        return filtered;
+    }
+  }, [searchQuery, products, sortBy]);
 
   return (
     <div>
@@ -16,25 +56,37 @@ export default async function ProductExplorer() {
             type="text"
             placeholder="Search products..."
             className="pl-10"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline">
-            <TrendingUpIcon className="size-4" /> Trending
+          <Button
+            variant={sortBy === "trending" ? "default" : "outline"}
+            onClick={() => setSortBy("trending")}
+          >
+            <TrendingUpIcon className="size-4" />
+            Trending
           </Button>
-          <Button>
-            <ClockIcon className="size-4" /> Recent
+          <Button
+            variant={sortBy === "recent" ? "default" : "outline"}
+            onClick={() => setSortBy("recent")}
+          >
+            <ClockIcon className="size-4" />
+            Recent
           </Button>
         </div>
       </div>
+
       <div className="mb-6">
         <p className="text-sm text-muted-foreground">
-          Showing {products.length} products
+          Showing {filteredProducts.length} products
         </p>
-      </div>{" "}
+      </div>
+
       <div className="grid-wrapper">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

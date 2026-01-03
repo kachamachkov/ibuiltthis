@@ -7,16 +7,11 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "../ui/badge";
-import { ChevronDownIcon, ChevronUpIcon, StarIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { InferSelectModel } from "drizzle-orm";
-import { products } from "@/db/schema";
+import { StarIcon } from "lucide-react";
 import VotingButtons from "./voting-buttons";
+import { ProductType } from "@/types";
 
-type Product = InferSelectModel<typeof products>;
-
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: ProductType }) {
   const hasVoted = false;
 
   return (
