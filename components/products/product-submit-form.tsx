@@ -4,9 +4,9 @@ import { FormField } from "@/components/forms/form-field";
 import { Button } from "@/components/ui/button";
 import { addProductAction } from "@/lib/products/product-actions";
 import { cn } from "@/lib/utils";
+import { FormState } from "@/types";
 import { Loader2Icon, SparklesIcon } from "lucide-react";
 import { useActionState } from "react";
-import { FormState } from "react-hook-form";
 
 const initialState: FormState = {
   success: false,
