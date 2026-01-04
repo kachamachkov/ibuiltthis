@@ -11,7 +11,7 @@ export default async function AdminPage() {
   const { userId } = await auth();
 
   if (!userId) {
-    redirect("/sign-in");
+    redirect("/");
   }
 
   const response = await clerkClient();
