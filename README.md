@@ -1,3 +1,3 @@
 ## iBuiltThis
-
-![alt text]({BA868817-98C2-48BB-BCB5-575B23DB4F46}.png)
+Admin panel overview:
+![alt text]({56B072F1-817B-4E50-8672-912A925A8CBD}.png)
