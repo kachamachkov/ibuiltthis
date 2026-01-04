@@ -74,7 +74,7 @@ export default function HeroSection() {
               variant="secondary"
             >
               <Link href="/submit">
-                Explore Porjects
+                Explore Projects
                 <ArrowRightIcon className="size-5" />
               </Link>
             </Button>
